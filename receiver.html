@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receiver Dashboard | FoodShare Network</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0d0d4e 0%, #04b3ed 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .header-content p {
+            opacity: 0.9;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0d0d4e;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .location-info {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .location-info i {
+            color: #04b3ed;
+            font-size: 1.2rem;
+        }
+
+        .location-text {
+            flex-grow: 1;
+        }
+
+        .change-location {
+            color: #04b3ed;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .donations-list {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .donations-list h2 {
+            color: #0d0d4e;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: #f0f0f0;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background-color: #04b3ed;
+            color: white;
+        }
+
+        .donation-item {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .donation-details h3 {
+            color: #0d0d4e;
+            margin-bottom: 5px;
+        }
+
+        .donation-meta {
+            display: flex;
+            gap: 15px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .donation-description {
+            margin-bottom: 15px;
+        }
+
+        .donor-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .donor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #0d0d4e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .donation-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .donation-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: #04b3ed;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0d0d4e;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            color: #555;
+        }
+
+        .btn-outline:hover {
+            background-color: #f5f5f5;
+        }
+
+        .no-donations {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .request-form {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .request-form textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .request-form .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .distance-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: #e3f7e8;
+            color: #2e7d32;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .special-instructions {
+            padding: 10px;
+            background-color: #fff8e1;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .filter-controls {
+                flex-wrap: wrap;
+            }
+
+            .donation-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .donation-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-hands-helping"></i> Receiver Dashboard</h1>
+                <p>Find food donations near you</p>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">R</div>
+                <div>
+                    <div id="usernameDisplay">Receiver</div>
+                    <a href="#" id="logoutBtn" style="color: white; font-size: 0.9rem;">Logout</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="location-info">
+            <i class="fas fa-map-marker-alt"></i>
+            <div class="location-text" id="currentLocation">Location not set</div>
+            <div class="change-location" id="changeLocationBtn">Change Location</div>
+        </div>
+
+        <div class="donations-list">
+            <h2><i class="fas fa-utensils"></i> Available Donations</h2>
+            <div class="filter-controls">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="nearby">Near Me</button>
+                <button class="filter-btn" data-filter="vegetarian">Vegetarian</button>
+                <button class="filter-btn" data-filter="non-vegetarian">Non-Vegetarian</button>
+            </div>
+            <div id="donationsContainer">
+                <div class="no-donations">
+                    <p>No food donations available at the moment.</p>
+                    <p>Please check back later or try changing your location.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentDonationUser'));
+            if (!currentUser || currentUser.role !== 'receiver') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Initialize user info
+            document.getElementById('usernameDisplay').textContent = currentUser.username;
+            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+
+            // Load user location
+            const userLocation = JSON.parse(localStorage.getItem(`userLocation_${currentUser.username}`));
+            if (userLocation) {
+                document.getElementById('currentLocation').textContent = userLocation.display_name || 'Your location';
+            }
+
+            // Change location button
+            document.getElementById('changeLocationBtn').addEventListener('click', function() {
+                window.location.href = 'location.html';
+            });
+
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('currentDonationUser');
+                window.location.href = 'index.html';
+            });
+
+            // Initialize donations if not exists
+            if (!localStorage.getItem('foodDonations')) {
+                localStorage.setItem('foodDonations', JSON.stringify([]));
+            }
+
+            // Load donations
+            loadDonations('all');
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    loadDonations(this.getAttribute('data-filter'));
+                });
+            });
+
+            function loadDonations(filter) {
+                const donations = JSON.parse(localStorage.getItem('foodDonations'));
+                const availableDonations = donations.filter(d => d.status === 'available');
+                const container = document.getElementById('donationsContainer');
+
+                if (availableDonations.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-donations">
+                            <p>No food donations available at the moment.</p>
+                            <p>Please check back later or try changing your location.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = '';
+                availableDonations.forEach(donation => {
+                    // Calculate distance if both locations have coordinates
+                    let distance = null;
+                    if (userLocation?.lat && userLocation?.lon && donation.location?.lat && donation.location?.lon) {
+                        distance = calculateDistance(
+                            userLocation.lat, userLocation.lon,
+                            donation.location.lat, donation.location.lon
+                        );
+                    }
+
+                    // Apply filters
+                    if (filter === 'nearby' && (!distance || distance > 10)) return;
+                    if (filter === 'vegetarian' && !donation.foodType.toLowerCase().includes('vegetarian')) return;
+                    if (filter === 'non-vegetarian' && !donation.foodType.toLowerCase().includes('non-vegetarian')) return;
+
+                    const donationElement = document.createElement('div');
+                    donationElement.className = 'donation-item';
+                    donationElement.innerHTML = `
+                        <div class="donation-details">
+                            <h3>${donation.foodType} (${donation.quantity})</h3>
+                            <div class="donation-meta">
+                                <span><i class="far fa-clock"></i> ${new Date(donation.createdAt).toLocaleString()}</span>
+                                <span><i class="fas fa-stopwatch"></i> Best before: ${new Date(donation.bestBefore).toLocaleString()}</span>
+                                ${distance ? `<span class="distance-badge"><i class="fas fa-map-marker-alt"></i> ${distance.toFixed(1)} km away</span>` : ''}
+                            </div>
+                            <div class="donation-description">
+                                <p>${donation.foodDescription}</p>
+                            </div>
+                            ${donation.specialInstructions ? `
+                                <div class="special-instructions">
+                                    <p><strong>Special Instructions:</strong> ${donation.specialInstructions}</p>
+                                </div>
+                            ` : ''}
+                            <div class="donor-info">
+                                <div class="donor-avatar">${donation.donor.charAt(0).toUpperCase()}</div>
+                                <div>Donated by ${donation.donor}</div>
+                            </div>
+                            <div class="donation-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${donation.location?.display_name || 'Location not specified'}</span>
+                            </div>
+                        </div>
+                        <div class="donation-actions">
+                            <button class="btn btn-primary request-btn" data-id="${donation.id}">
+                                <i class="fas fa-hand-holding-heart"></i> Request Food
+                            </button>
+                            <button class="btn btn-outline view-details-btn" data-id="${donation.id}">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </div>
+                        <div class="request-form" id="requestForm-${donation.id}">
+                            <textarea placeholder="Add a message for the donor (optional)" id="requestMessage-${donation.id}"></textarea>
+                            <div class="btn-group">
+                                <button class="btn btn-primary confirm-request-btn" data-id="${donation.id}">
+                                    <i class="fas fa-check"></i> Confirm Request
+                                </button>
+                                <button class="btn btn-outline cancel-request-btn" data-id="${donation.id}">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(donationElement);
+                });
+
+                // Add event listeners
+                document.querySelectorAll('.request-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const donationId = this.getAttribute('data-id');
+                        document.getElementById(`requestForm-${donationId}`).style.display = 'block';
+                        this.style.display = 'none';
+                    });
+                });
+
+                document.querySelectorAll('.cancel-request-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const donationId = this.getAttribute('data-id');
+                        document.getElementById(`requestForm-${donationId}`).style.display = 'none';
+                        document.querySelector(`.request-btn[data-id="${donationId}"]`).style.display = 'inline-flex';
+                    });
+                });
+
+                document.querySelectorAll('.confirm-request-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const donationId = this.getAttribute('data-id');
+                        const message = document.getElementById(`requestMessage-${donationId}`).value;
+                        
+                        const donations = JSON.parse(localStorage.getItem('foodDonations'));
+                        const donationIndex = donations.findIndex(d => d.id === donationId);
+                        
+                        if (donationIndex !== -1) {
+                            donations[donationIndex].status = 'requested';
+                            donations[donationIndex].requests = [{
+                                receiver: currentUser.username,
+                                message,
+                                status: 'pending',
+                                requestedAt: new Date().toISOString(),
+                                receiverLocation: userLocation
+                            }];
+                            
+                            localStorage.setItem('foodDonations', JSON.stringify(donations));
+                            alert('Request sent successfully! The donor will review your request.');
+                            loadDonations(filter);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.view-details-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const donationId = this.getAttribute('data-id');
+                        const donations = JSON.parse(localStorage.getItem('foodDonations'));
+                        const donation = donations.find(d => d.id === donationId);
+                        
+                        if (donation) {
+                            alert(`Food Details:\n\nType: ${donation.foodType}\nQuantity: ${donation.quantity}\nDescription: ${donation.foodDescription}\nBest Before: ${new Date(donation.bestBefore).toLocaleString()}\nPickup Time: ${donation.preferredPickup || 'Not specified'}\nSpecial Instructions: ${donation.specialInstructions || 'None'}`);
+                        }
+                    });
+                });
+            }
+
+            // Calculate distance between two coordinates in km
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371; // Earth radius in km
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = 
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
+        });
+    </script>
+</body>
+</html>
