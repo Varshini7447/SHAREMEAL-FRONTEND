@@ -1,3 +1,14 @@
+
+
+
+
+
+
+
+
+
+
+
 const sign_in_btn = document.querySelector("#sign-in-btn");
 const sign_up_btn = document.querySelector("#sign-up-btn");
 const container = document.querySelector(".container");
@@ -89,8 +100,14 @@ document.querySelector(".sign-up-form").addEventListener("submit", function(e) {
   localStorage.setItem("donationUsers", JSON.stringify(users));
   localStorage.setItem("currentDonationUser", JSON.stringify(newUser));
   
-  alert("Account created successfully! Please set your location.");
-  window.location.href = "location.html"; // Redirect to location page first
+  // Redirect based on role
+  if (role === 'ngo') {
+    alert("NGO account created successfully!");
+    window.location.href = "ngo-dashboard.html";
+  } else {
+    alert("Account created successfully! Please set your location.");
+    window.location.href = "location.html";
+  }
 });
 
 // Sign In Functionality
@@ -116,32 +133,35 @@ document.querySelector(".sign-in-form").addEventListener("submit", function(e) {
   if (user) {
     localStorage.setItem("currentDonationUser", JSON.stringify(user));
     
-    // Check if user has location set
-    const userLocation = JSON.parse(localStorage.getItem(`userLocation_${user.username}`));
-    
-    if (!userLocation) {
-      alert("Please set your location first");
-      window.location.href = "location.html";
-    } else {
-      redirectBasedOnRole(user.role);
+    // Check if user has location set (not required for NGOs)
+    if (user.role !== 'ngo') {
+      const userLocation = JSON.parse(localStorage.getItem(`userLocation_${user.username}`));
+      
+      if (!userLocation) {
+        alert("Please set your location first");
+        window.location.href = "location.html";
+        return;
+      }
     }
+    
+    redirectBasedOnRole(user.role);
   } else {
     alert("Invalid credentials");
   }
 });
 
-// Redirect based on user role and location status
+// Single, unified redirect function for all roles
 function redirectBasedOnRole(role) {
-  const currentUser = JSON.parse(localStorage.getItem('currentDonationUser'));
-  
   if (role === 'donor') {
     window.location.href = 'donor.html';
-  } else {
+  } else if (role === 'receiver') {
     window.location.href = 'receiver.html';
+  } else if (role === 'ngo') {
+    window.location.href = 'ngo-dashboard.html';
   }
 }
 
-// Helper function to calculate distance between coordinates (used in receiver dashboard)
+// Helper function to calculate distance between coordinates
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Earth radius in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -153,3 +173,4 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   return R * c;
 }
+

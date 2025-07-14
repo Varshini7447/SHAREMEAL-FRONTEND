@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Meal | Fight Hunger, Share Food</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root
+        {
+            --primary: #3A86FF;
+            --secondary: #2667CC;
+            --dark: #1A2E4D;
+            --light: #FFFFFF;
+            --accent: #E2F0FF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            width: 100%;
+            height: 100vh;
+            padding: 2rem 5rem;
+            display: flex;
+            flex-direction: column;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--dark);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 1.05rem;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+        }
+        
+        .nav-button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+        }
+        
+        .cta-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1.05rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .cta-button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+            animation: none;
+        }
+        
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-grow: 1;
+            width: 100%;
+            height: calc(100vh - 150px);
+            gap: 5rem;
+        }
+        
+        .hero-content {
+            width: 45%;
+            padding-right: 2rem;
+            animation: slideInLeft 0.8s ease-out;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            animation: fadeIn 1s ease-out 0.2s both;
+        }
+        
+        .hero h1 span {
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2.2rem;
+            color: #555;
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+        
+        .hero-image {
+            position: relative;
+            width: 40%;
+            height: 75%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slideInRight 0.8s ease-out;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(58, 134, 255, 0.4),
+                        0 10px 20px -5px rgba(0, 0, 0, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-shape {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .shape-1 {
+            top: -20px;
+            right: -20px;
+            width: 120px;
+            height: 120px;
+            opacity: 0.8;
+            clip-path: circle(50% at 100% 0);
+            animation-delay: 0.5s;
+        }
+        
+        .shape-2 {
+            bottom: -20px;
+            left: -20px;
+            width: 120px;
+            height: 120px;
+            background-color: var(--primary);
+            opacity: 0.2;
+            clip-path: circle(50% at 0 100%);
+            animation-delay: 1s;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 3.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        .stat-item {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .stat-item:nth-child(1) { animation-delay: 0.6s; }
+        .stat-item:nth-child(2) { animation-delay: 0.8s; }
+        .stat-item:nth-child(3) { animation-delay: 1s; }
+        
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        .stat-item p {
+            font-size: 1rem;
+            color: #777;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.2rem 0;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                padding: 2rem 3rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .stat-item h3 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                padding: 2rem;
+            }
+            
+            .hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    width: 100%;
+    height: calc(100vh - 150px);
+    gap: 2rem; /* Reduced from 5rem to 2rem */
+}
+
+.hero-content {
+    width: 50%; /* Increased from 45% to 50% */
+    padding-right: 1rem; /* Reduced from 2rem to 1rem */
+    animation: slideInLeft 0.8s ease-out;
+}
+
+.hero-image {
+    position: relative;
+    width: 45%; /* Adjusted from 40% to 45% */
+    height: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: slideInRight 0.8s ease-out;
+}
+            
+            .stats {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Share<span>Meal</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="index.html" class="nav-button">Donate Now</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Share a meal, <span>fight hunger</span> in your community</h1>
+                <p>Join thousands of people helping to reduce food waste and feed those in need. Your small contribution makes a big difference.</p>
+                
+                <a href="index.html" class="cta-button">Get Started</a>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <h3>10K+</h3>
+                        <p>Meals Shared</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>500+</h3>
+                        <p>Partners</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>100+</h3>
+                        <p>Communities</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <img src="welcomeimage2.jpg" alt="People sharing food">
+                <div class="floating-shape shape-1"></div>
+                <div class="floating-shape shape-2"></div>
+            </div>
+        </section>
+        
+        <footer>
+            &copy; 2025 ShareMeal. All rights reserved.
+        </footer>
+    </div>
+</body>
+</html>

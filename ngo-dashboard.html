@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receiver Dashboard | FoodShare Network</title>
+    <title>NGO Dashboard | FoodShare Network</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         * {
             margin: 0;
@@ -19,9 +20,9 @@
             color: #333;
         }
 
-        /* New Navbar Styles */
+        /* Navbar Styles */
         .navbar {
-            background: linear-gradient(135deg, #0d0d4e 0%, #04b3ed 100%);
+            background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%);
             color: white;
             padding: 15px 0;
             width: 100%;
@@ -29,6 +30,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            height: 90px;
         }
 
         .nav-container {
@@ -44,7 +46,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.5rem;
+            font-size: 1.9rem;
             font-weight: 600;
         }
 
@@ -59,16 +61,16 @@
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background-color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #0d0d4e;
+            color: #2e7d32;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.5rem;
         }
 
         .container {
@@ -79,7 +81,7 @@
 
         /* Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, rgba(13, 13, 78, 0.9) 0%, rgba(4, 179, 237, 0.9) 100%);
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.9) 0%, rgba(129, 199, 132, 0.9) 100%);
             color: white;
             padding: 40px;
             border-radius: 10px;
@@ -113,6 +115,47 @@
             opacity: 0.9;
         }
 
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid #81c784;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #81c784;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1b5e20;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
         /* Location Info */
         .location-info {
             background-color: white;
@@ -123,11 +166,11 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            border-left: 5px solid #04b3ed;
+            border-left: 5px solid #81c784;
         }
 
         .location-info i {
-            color: #04b3ed;
+            color: #81c784;
             font-size: 1.5rem;
             min-width: 30px;
         }
@@ -138,17 +181,17 @@
         }
 
         .change-location {
-            color: #04b3ed;
+            color: #81c784;
             font-weight: 600;
             cursor: pointer;
             padding: 8px 15px;
             border-radius: 6px;
-            background-color: rgba(4, 179, 237, 0.1);
+            background-color: rgba(129, 199, 132, 0.1);
             transition: all 0.3s;
         }
 
         .change-location:hover {
-            background-color: rgba(4, 179, 237, 0.2);
+            background-color: rgba(129, 199, 132, 0.2);
         }
 
         /* Donations List */
@@ -161,7 +204,7 @@
         }
 
         .donations-list h2 {
-            color: #0d0d4e;
+            color: #1b5e20;
             margin-bottom: 25px;
             font-size: 1.8rem;
             display: flex;
@@ -194,9 +237,9 @@
         }
 
         .filter-btn.active {
-            background: linear-gradient(135deg, #04b3ed 0%, #0d0d4e 100%);
+            background: linear-gradient(135deg, #81c784 0%, #2e7d32 100%);
             color: white;
-            box-shadow: 0 4px 10px rgba(4, 179, 237, 0.3);
+            box-shadow: 0 4px 10px rgba(129, 199, 132, 0.3);
         }
 
         .donation-item {
@@ -214,7 +257,7 @@
         }
 
         .donation-details h3 {
-            color: #0d0d4e;
+            color: #1b5e20;
             margin-bottom: 10px;
             font-size: 1.4rem;
             display: flex;
@@ -233,7 +276,7 @@
 
         .donation-meta i {
             margin-right: 5px;
-            color: #04b3ed;
+            color: #81c784;
         }
 
         .donation-description {
@@ -252,7 +295,7 @@
             width: 45px;
             height: 45px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #0d0d4e 0%, #04b3ed 100%);
+            background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%);
             color: white;
             display: flex;
             align-items: center;
@@ -289,14 +332,14 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #04b3ed 0%, #0d0d4e 100%);
+            background: linear-gradient(135deg, #81c784 0%, #2e7d32 100%);
             color: white;
-            box-shadow: 0 4px 10px rgba(4, 179, 237, 0.3);
+            box-shadow: 0 4px 10px rgba(129, 199, 132, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(4, 179, 237, 0.4);
+            box-shadow: 0 6px 15px rgba(129, 199, 132, 0.4);
         }
 
         .btn-outline {
@@ -332,7 +375,7 @@
             background-color: #f9f9f9;
             border-radius: 8px;
             display: none;
-            border-left: 4px solid #04b3ed;
+            border-left: 4px solid #81c784;
         }
 
         .request-form textarea {
@@ -348,8 +391,8 @@
         }
 
         .request-form textarea:focus {
-            border-color: #04b3ed;
-            box-shadow: 0 0 0 3px rgba(4, 179, 237, 0.2);
+            border-color: #81c784;
+            box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.2);
             outline: none;
         }
 
@@ -381,7 +424,7 @@
         }
 
         .special-instructions strong {
-            color: #0d0d4e;
+            color: #1b5e20;
         }
 
         /* My Requests Section */
@@ -394,7 +437,7 @@
         }
 
         .my-requests h2 {
-            color: #0d0d4e;
+            color: #1b5e20;
             margin-bottom: 25px;
             font-size: 1.8rem;
             display: flex;
@@ -435,50 +478,14 @@
             color: #d32f2f;
         }
 
-        .claim-btn {
-            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        .status-claimed {
+            background-color: #4caf50;
             color: white;
         }
 
-        /* Stats Section */
-        .stats-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-top: 4px solid #04b3ed;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-icon {
-            font-size: 2.5rem;
-            color: #04b3ed;
-            margin-bottom: 15px;
-        }
-
-        .stat-number {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #0d0d4e;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 1.1rem;
+        .claim-btn {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white;
         }
 
         /* History Section */
@@ -492,7 +499,7 @@
         }
 
         .history-section h2 {
-            color: #0d0d4e;
+            color: #1b5e20;
             margin-bottom: 25px;
             font-size: 1.8rem;
             display: flex;
@@ -518,11 +525,6 @@
             margin-bottom: 10px;
         }
 
-        .status-claimed {
-            background-color: #4caf50;
-            color: white;
-        }
-
         /* Tabs */
         .tabs {
             display: flex;
@@ -540,12 +542,35 @@
         }
 
         .tab.active {
-            color: #0d0d4e;
-            border-bottom: 3px solid #04b3ed;
+            color: #1b5e20;
+            border-bottom: 3px solid #81c784;
         }
 
         .tab:hover:not(.active) {
-            color: #04b3ed;
+            color: #81c784;
+        }
+
+        /* Coming Soon Badge */
+        .coming-soon-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #fff8e1;
+            color: #ff8f00;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        /* Timer Badge */
+        .timer-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: #fff8e1;
+            color: #ff8f00;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 8px;
         }
 
         /* Responsive Styles */
@@ -591,7 +616,7 @@
 
         .request-again-btn {
             background-color: #f5f5f5;
-            color: #0d0d4e;
+            color: #1b5e20;
             border: 1px solid #ddd;
         }
 
@@ -602,7 +627,7 @@
     </style>
 </head>
 <body>
-    <!-- New Navbar -->
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -610,9 +635,9 @@
                 <span>FoodShare Network</span>
             </div>
             <div class="user-info">
-                <div class="user-avatar" id="userAvatar">R</div>
+                <div class="user-avatar" id="userAvatar">N</div>
                 <div>
-                    <div id="usernameDisplay">Receiver</div>
+                    <div id="usernameDisplay">NGO</div>
                     <a href="#" id="logoutBtn" style="color: white; font-size: 0.9rem;">Logout</a>
                 </div>
             </div>
@@ -622,8 +647,8 @@
     <div class="container">
         <!-- Hero Section -->
         <div class="hero-section">
-            <h1><i class="fas fa-hands-helping"></i> Find Food Donations</h1>
-            <p>Discover surplus food from generous donors in your community and help reduce food waste while feeding those in need.</p>
+            <h1><i class="fas fa-hands-helping"></i> NGO Dashboard</h1>
+            <p>Access surplus food donations from generous donors in your community to support those in need.</p>
         </div>
 
         <!-- Stats Section -->
@@ -646,8 +671,8 @@
                 <div class="stat-icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="stat-number" id="activeDonors">0</div>
-                <div class="stat-label">Active Donors</div>
+                <div class="stat-number" id="peopleHelped">0</div>
+                <div class="stat-label">People Helped</div>
             </div>
         </div>
 
@@ -660,8 +685,15 @@
             </div>
         </div>
 
-        <!-- Donations List -->
-        <div class="donations-list">
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" id="availableTab">Available Donations</div>
+            <div class="tab" id="requestsTab">Your Requests</div>
+            <div class="tab" id="historyTab">History</div>
+        </div>
+
+        <!-- Available Donations -->
+        <div class="donations-list" id="availableDonationsSection">
             <h2><i class="fas fa-utensils"></i> Available Donations</h2>
             <div class="filter-controls">
                 <button class="filter-btn active" data-filter="all">
@@ -676,9 +708,6 @@
                 <button class="filter-btn" data-filter="non-vegetarian">
                     <i class="fas fa-drumstick-bite"></i> Non-Veg
                 </button>
-                <button class="filter-btn" id="viewHistoryBtn">
-                    <i class="fas fa-history"></i> History
-                </button>
             </div>
             <div id="donationsContainer">
                 <div class="no-donations">
@@ -690,8 +719,8 @@
         </div>
 
         <!-- My Requests Section -->
-        <div class="my-requests">
-            <h2><i class="fas fa-history"></i> My Requests</h2>
+        <div class="my-requests" id="myRequestsSection" style="display: none;">
+            <h2><i class="fas fa-history"></i> Your Requests</h2>
             <div id="myRequestsContainer">
                 <div class="no-donations">
                     <i class="fas fa-clock"></i>
@@ -701,7 +730,7 @@
         </div>
 
         <!-- History Section -->
-        <div class="history-section" id="historySection">
+        <div class="history-section" id="historySection" style="display: none;">
             <h2><i class="fas fa-history"></i> Claimed Donations</h2>
             <div id="historyContainer">
                 <div class="no-donations">
@@ -712,18 +741,20 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is logged in
+            // Check if user is logged in as NGO
             const currentUser = JSON.parse(localStorage.getItem('currentDonationUser'));
-            if (!currentUser || currentUser.role !== 'receiver') {
+            if (!currentUser || currentUser.role !== 'ngo') {
                 window.location.href = 'index.html';
                 return;
             }
 
             // Initialize user info
-            document.getElementById('usernameDisplay').textContent = currentUser.username;
-            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+            document.getElementById('usernameDisplay').textContent = currentUser.organization || currentUser.username;
+            document.getElementById('userAvatar').textContent = (currentUser.organization || currentUser.username).charAt(0).toUpperCase();
 
             // Load user location
             const userLocation = JSON.parse(localStorage.getItem(`userLocation_${currentUser.username}`));
@@ -736,18 +767,32 @@
                 window.location.href = 'location.html';
             });
 
-            // View History button
-            document.getElementById('viewHistoryBtn').addEventListener('click', function() {
-                document.getElementById('donationsContainer').style.display = 'none';
+            // Tab switching
+            document.getElementById('availableTab').addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('availableDonationsSection').style.display = 'block';
+                document.getElementById('myRequestsSection').style.display = 'none';
+                document.getElementById('historySection').style.display = 'none';
+                loadDonations('all');
+            });
+
+            document.getElementById('requestsTab').addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('availableDonationsSection').style.display = 'none';
+                document.getElementById('myRequestsSection').style.display = 'block';
+                document.getElementById('historySection').style.display = 'none';
+                loadMyRequests();
+            });
+
+            document.getElementById('historyTab').addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('availableDonationsSection').style.display = 'none';
+                document.getElementById('myRequestsSection').style.display = 'none';
                 document.getElementById('historySection').style.display = 'block';
                 loadHistory();
-                
-                // Update filter buttons
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    if (btn.id !== 'viewHistoryBtn') {
-                        btn.classList.remove('active');
-                    }
-                });
             });
 
             // Logout button
@@ -762,30 +807,82 @@
                 localStorage.setItem('foodDonations', JSON.stringify([]));
             }
 
+            // Initialize NGO requests if not exists
+            if (!localStorage.getItem('ngoRequests')) {
+                localStorage.setItem('ngoRequests', JSON.stringify([]));
+            }
+
             // Load donations and stats
             loadDonations('all');
             loadMyRequests();
             loadStats();
 
+            // Set up real-time updates (check every 10 seconds)
+            setInterval(() => {
+                loadDonations('all');
+                loadMyRequests();
+                loadStats();
+                
+                // Refresh location display in case it was updated
+                const updatedLocation = JSON.parse(localStorage.getItem(`userLocation_${currentUser.username}`));
+                if (updatedLocation) {
+                    document.getElementById('currentLocation').textContent = updatedLocation.display_name || 'Your location';
+                }
+            }, 10000);
+
             // Filter buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                if (btn.id !== 'viewHistoryBtn') {
-                    btn.addEventListener('click', function() {
-                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        document.getElementById('donationsContainer').style.display = 'block';
-                        document.getElementById('historySection').style.display = 'none';
-                        loadDonations(this.getAttribute('data-filter'));
-                    });
-                }
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    loadDonations(this.getAttribute('data-filter'));
+                });
             });
 
             function loadDonations(filter) {
-                const donations = JSON.parse(localStorage.getItem('foodDonations'));
-                const availableDonations = donations.filter(d => d.status === 'available');
+                const donations = JSON.parse(localStorage.getItem('foodDonations')) || [];
+                const ngoRequests = JSON.parse(localStorage.getItem('ngoRequests')) || [];
+                const now = new Date();
+                
+                // Get donations that are available for NGO
+                let availableDonations = donations.filter(donation => {
+                    const bestBefore = new Date(donation.bestBefore);
+                    // Add 2-minute delay (120,000 milliseconds) before showing
+                    const visibleAfter = donation.visibleAfter ? new Date(donation.visibleAfter) : new Date(new Date(donation.createdAt).getTime() + 120000);
+                    
+                    // Check if already requested by this NGO
+                    const alreadyRequested = ngoRequests.some(r => 
+                        r.donationId === donation.id && 
+                        r.ngo === currentUser.username
+                    );
+                    
+                    return donation.status === 'available' && 
+                           !alreadyRequested &&
+                           now <= bestBefore &&
+                           now >= visibleAfter; // Only show if current time is after visibleAfter time
+                });
+                
+                // Get donations that are coming soon (not yet visible)
+                const comingSoonDonations = donations.filter(donation => {
+                    const bestBefore = new Date(donation.bestBefore);
+                    // Add 2-minute delay
+                    const visibleAfter = donation.visibleAfter ? new Date(donation.visibleAfter) : new Date(new Date(donation.createdAt).getTime() + 120000);
+                    
+                    // Check if already requested by this NGO
+                    const alreadyRequested = ngoRequests.some(r => 
+                        r.donationId === donation.id && 
+                        r.ngo === currentUser.username
+                    );
+                    
+                    return donation.status === 'available' && 
+                           !alreadyRequested &&
+                           now <= bestBefore &&
+                           now < visibleAfter; // Only show if current time is before visibleAfter time
+                });
+                
                 const container = document.getElementById('donationsContainer');
-
-                if (availableDonations.length === 0) {
+                
+                if (availableDonations.length === 0 && comingSoonDonations.length === 0) {
                     container.innerHTML = `
                         <div class="no-donations">
                             <i class="fas fa-utensils"></i>
@@ -795,8 +892,10 @@
                     `;
                     return;
                 }
-
+                
                 container.innerHTML = '';
+                
+                // First show available donations
                 availableDonations.forEach(donation => {
                     // Calculate distance if both locations have coordinates
                     let distance = null;
@@ -806,20 +905,17 @@
                             donation.location.lat, donation.location.lon
                         );
                     }
-
-                    // Check food type for filtering
-                    const isVegetarian = donation.foodType.toLowerCase().includes('vegetarian');
                     
-                    // Apply filters
+                    // Apply additional filters
                     if (filter === 'nearby' && (!distance || distance > 10)) return;
-                    if (filter === 'vegetarian' && !isVegetarian) return;
-                    if (filter === 'non-vegetarian' && isVegetarian) return;
+                    if (filter === 'vegetarian' && !donation.foodType.toLowerCase().includes('vegetarian')) return;
+                    if (filter === 'non-vegetarian' && !donation.foodType.toLowerCase().includes('non-vegetarian')) return;
 
                     const donationElement = document.createElement('div');
                     donationElement.className = 'donation-item';
                     donationElement.innerHTML = `
                         <div class="donation-details">
-                            <h3><i class="fas fa-${isVegetarian ? 'leaf' : 'drumstick-bite'}"></i> ${donation.foodType} (${donation.quantity})</h3>
+                            <h3><i class="fas fa-${donation.foodType.toLowerCase().includes('vegetarian') ? 'leaf' : 'drumstick-bite'}"></i> ${donation.foodType} (${donation.quantity})</h3>
                             <div class="donation-meta">
                                 <span><i class="far fa-clock"></i> ${new Date(donation.createdAt).toLocaleString()}</span>
                                 <span><i class="fas fa-stopwatch"></i> Best before: ${new Date(donation.bestBefore).toLocaleString()}</span>
@@ -851,7 +947,7 @@
                             </button>
                         </div>
                         <div class="request-form" id="requestForm-${donation.id}">
-                            <textarea placeholder="Add a message for the donor (e.g., preferred pickup time, special requests)" id="requestMessage-${donation.id}"></textarea>
+                            <textarea placeholder="Add a message for the donor (e.g., about your organization, how you'll use the food)" id="requestMessage-${donation.id}"></textarea>
                             <div class="btn-group">
                                 <button class="btn btn-primary confirm-request-btn" data-id="${donation.id}">
                                     <i class="fas fa-check"></i> Confirm Request
@@ -860,6 +956,50 @@
                                     <i class="fas fa-times"></i> Cancel
                                 </button>
                             </div>
+                        </div>
+                    `;
+                    container.appendChild(donationElement);
+                });
+                
+                // Then show coming soon donations (grayed out)
+                comingSoonDonations.forEach(donation => {
+                    // Calculate time until available
+                    const visibleAfter = donation.visibleAfter ? new Date(donation.visibleAfter) : new Date(new Date(donation.createdAt).getTime() + 120000);
+                    const timeUntilAvailable = Math.ceil((visibleAfter - now) / 60000); // in minutes
+                    
+                    const donationElement = document.createElement('div');
+                    donationElement.className = 'donation-item';
+                    donationElement.style.opacity = '0.6';
+                    donationElement.innerHTML = `
+                        <div class="donation-details">
+                            <h3><i class="fas fa-${donation.foodType.toLowerCase().includes('vegetarian') ? 'leaf' : 'drumstick-bite'}"></i> ${donation.foodType} (${donation.quantity}) 
+                                <span class="coming-soon-badge"><i class="fas fa-clock"></i> Available in ${timeUntilAvailable} min</span>
+                            </h3>
+                            <div class="donation-meta">
+                                <span><i class="far fa-clock"></i> ${new Date(donation.createdAt).toLocaleString()}</span>
+                                <span><i class="fas fa-stopwatch"></i> Best before: ${new Date(donation.bestBefore).toLocaleString()}</span>
+                            </div>
+                            <div class="donation-description">
+                                <p>${donation.foodDescription}</p>
+                            </div>
+                            ${donation.specialInstructions ? `
+                                <div class="special-instructions">
+                                    <p><strong>Special Instructions:</strong> ${donation.specialInstructions}</p>
+                                </div>
+                            ` : ''}
+                            <div class="donor-info">
+                                <div class="donor-avatar">${donation.donor.charAt(0).toUpperCase()}</div>
+                                <div>Donated by ${donation.donor}</div>
+                            </div>
+                            <div class="donation-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${donation.location?.display_name || 'Location not specified'}</span>
+                            </div>
+                        </div>
+                        <div class="donation-actions">
+                            <button class="btn btn-outline" disabled>
+                                <i class="fas fa-lock"></i> Available Soon
+                            </button>
                         </div>
                     `;
                     container.appendChild(donationElement);
@@ -888,19 +1028,42 @@
                         const message = document.getElementById(`requestMessage-${donationId}`).value;
                         
                         const donations = JSON.parse(localStorage.getItem('foodDonations'));
+                        const ngoRequests = JSON.parse(localStorage.getItem('ngoRequests')) || [];
                         const donationIndex = donations.findIndex(d => d.id === donationId);
                         
                         if (donationIndex !== -1) {
+                            // Update donation status and add request
                             donations[donationIndex].status = 'requested';
                             donations[donationIndex].requests = [{
                                 receiver: currentUser.username,
+                                organization: currentUser.organization || currentUser.username,
                                 message,
                                 status: 'pending',
                                 requestedAt: new Date().toISOString(),
-                                receiverLocation: userLocation
+                                receiverLocation: userLocation,
+                                isNGO: true
                             }];
                             
+                            // Add to NGO requests
+                            const request = {
+                                id: Date.now().toString(),
+                                donationId,
+                                ngo: currentUser.username,
+                                organization: currentUser.organization || currentUser.username,
+                                message,
+                                receiverLocation: userLocation,
+                                status: 'pending',
+                                createdAt: new Date().toISOString(),
+                                foodType: donations[donationIndex].foodType,
+                                quantity: donations[donationIndex].quantity,
+                                donor: donations[donationIndex].donor
+                            };
+                            ngoRequests.push(request);
+                            
+                            // Save data
                             localStorage.setItem('foodDonations', JSON.stringify(donations));
+                            localStorage.setItem('ngoRequests', JSON.stringify(ngoRequests));
+                            
                             alert('Request sent successfully! The donor will review your request.');
                             loadDonations(filter);
                             loadMyRequests();
@@ -923,12 +1086,22 @@
             }
 
             function loadMyRequests() {
+                const ngoRequests = JSON.parse(localStorage.getItem('ngoRequests')) || [];
                 const donations = JSON.parse(localStorage.getItem('foodDonations')) || [];
-                const myRequests = donations.filter(d => 
-                    d.requests && 
-                    d.requests.some(r => r.receiver === currentUser.username) &&
-                    d.status !== 'claimed'
-                );
+                
+                // Filter requests for this NGO
+                const myRequests = ngoRequests.filter(request => 
+                    request.ngo === currentUser.username
+                ).map(request => {
+                    const donation = donations.find(d => d.id === request.donationId);
+                    return {
+                        ...request,
+                        donationStatus: donation?.status || 'unknown',
+                        donor: donation?.donor || 'Unknown',
+                        foodDescription: donation?.foodDescription || 'No description',
+                        location: donation?.location || null
+                    };
+                });
                 
                 const container = document.getElementById('myRequestsContainer');
                 
@@ -942,9 +1115,11 @@
                     return;
                 }
                 
+                // Sort by creation time (newest first)
+                myRequests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
                 container.innerHTML = '';
-                myRequests.forEach(donation => {
-                    const request = donation.requests.find(r => r.receiver === currentUser.username);
+                myRequests.forEach(request => {
                     let statusClass = '';
                     let statusText = '';
                     
@@ -957,6 +1132,9 @@
                     } else if (request.status === 'declined') {
                         statusClass = 'status-declined';
                         statusText = 'Declined';
+                    } else if (request.status === 'claimed') {
+                        statusClass = 'status-claimed';
+                        statusText = 'Claimed';
                     }
                     
                     const requestElement = document.createElement('div');
@@ -964,21 +1142,30 @@
                     
                     requestElement.innerHTML = `
                         <div class="request-status ${statusClass}">${statusText}</div>
-                        <h3>${donation.foodType} (${donation.quantity})</h3>
-                        <p>Donor: ${donation.donor}</p>
-                        <p>Requested: ${new Date(request.requestedAt).toLocaleString()}</p>
-                        ${request.message ? `<p>Your message: ${request.message}</p>` : ''}
-                        ${donation.status === 'accepted' ? `
+                        <h3>${request.foodType} (${request.quantity})</h3>
+                        <p><strong>Donor:</strong> ${request.donor}</p>
+                        <p><strong>Requested:</strong> ${new Date(request.createdAt).toLocaleString()}</p>
+                        ${request.message ? `<p><strong>Your message:</strong> ${request.message}</p>` : ''}
+                        ${request.location?.display_name ? `<p><strong>Location:</strong> ${request.location.display_name}</p>` : ''}
+                        <p><strong>Description:</strong> ${request.foodDescription}</p>
+                        ${request.status === 'accepted' || request.donationStatus === 'accepted' ? `
                             <div class="donation-actions">
-                                <button class="btn btn-primary claim-btn" data-id="${donation.id}">
+                                <button class="btn btn-primary claim-btn" data-id="${request.donationId}">
                                     <i class="fas fa-check-circle"></i> Mark as Claimed
                                 </button>
                             </div>
                         ` : ''}
                         ${request.status === 'declined' ? `
                             <div class="donation-actions">
-                                <button class="btn btn-outline request-again-btn" data-id="${donation.id}">
+                                <button class="btn btn-outline request-again-btn" data-id="${request.donationId}">
                                     <i class="fas fa-redo"></i> Request Again
+                                </button>
+                            </div>
+                        ` : ''}
+                        ${request.status === 'pending' ? `
+                            <div class="donation-actions">
+                                <button class="btn btn-outline cancel-request-btn" data-id="${request.donationId}">
+                                    <i class="fas fa-times"></i> Cancel Request
                                 </button>
                             </div>
                         ` : ''}
@@ -999,39 +1186,71 @@
                 document.querySelectorAll('.request-again-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const donationId = this.getAttribute('data-id');
-                        resetRequest(donationId);
+                        // Remove the declined request
+                        const ngoRequests = JSON.parse(localStorage.getItem('ngoRequests')) || [];
+                        const updatedRequests = ngoRequests.filter(r => 
+                            !(r.donationId === donationId && r.ngo === currentUser.username)
+                        );
+                        localStorage.setItem('ngoRequests', JSON.stringify(updatedRequests));
+                        
+                        // This will automatically show up in available donations
+                        loadDonations('all');
+                        loadMyRequests();
+                    });
+                });
+                
+                // Add event listeners for cancel request buttons
+                document.querySelectorAll('.cancel-request-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const donationId = this.getAttribute('data-id');
+                        
+                        if (confirm('Are you sure you want to cancel this request?')) {
+                            // Update donation status back to available
+                            const donations = JSON.parse(localStorage.getItem('foodDonations'));
+                            const donationIndex = donations.findIndex(d => d.id === donationId);
+                            if (donationIndex !== -1) {
+                                donations[donationIndex].status = 'available';
+                                donations[donationIndex].requests = [];
+                                localStorage.setItem('foodDonations', JSON.stringify(donations));
+                            }
+                            
+                            // Remove the NGO request
+                            const ngoRequests = JSON.parse(localStorage.getItem('ngoRequests')) || [];
+                            const updatedRequests = ngoRequests.filter(r => 
+                                !(r.donationId === donationId && r.ngo === currentUser.username)
+                            );
+                            localStorage.setItem('ngoRequests', JSON.stringify(updatedRequests));
+                            
+                            alert('Request cancelled successfully.');
+                            loadDonations('all');
+                            loadMyRequests();
+                            loadStats();
+                        }
                     });
                 });
             }
             
-            function resetRequest(donationId) {
-                const donations = JSON.parse(localStorage.getItem('foodDonations'));
-                const donationIndex = donations.findIndex(d => d.id === donationId);
-                
-                if (donationIndex !== -1) {
-                    donations[donationIndex].status = 'available';
-                    donations[donationIndex].requests = donations[donationIndex].requests.filter(
-                        r => r.receiver !== currentUser.username
-                    );
-                    
-                    localStorage.setItem('foodDonations', JSON.stringify(donations));
-                    loadMyRequests();
-                    loadDonations('all');
-                    loadStats();
-                }
-            }
-            
             function loadHistory() {
+                const ngoRequests = JSON.parse(localStorage.getItem('ngoRequests')) || [];
                 const donations = JSON.parse(localStorage.getItem('foodDonations')) || [];
-                const claimedDonations = donations.filter(d => 
-                    d.requests && 
-                    d.requests.some(r => r.receiver === currentUser.username) &&
-                    d.status === 'claimed'
-                );
+                
+                // Filter claimed requests for this NGO
+                const claimedRequests = ngoRequests.filter(request => 
+                    request.ngo === currentUser.username && 
+                    request.status === 'claimed'
+                ).map(request => {
+                    const donation = donations.find(d => d.id === request.donationId);
+                    return {
+                        ...request,
+                        donor: donation?.donor || 'Unknown',
+                        location: donation?.location || null,
+                        foodDescription: donation?.foodDescription || 'No description'
+                    };
+                });
                 
                 const container = document.getElementById('historyContainer');
                 
-                if (claimedDonations.length === 0) {
+                if (claimedRequests.length === 0) {
                     container.innerHTML = `
                         <div class="no-donations">
                             <i class="fas fa-utensils"></i>
@@ -1042,19 +1261,18 @@
                 }
                 
                 container.innerHTML = '';
-                claimedDonations.forEach(donation => {
-                    const request = donation.requests.find(r => r.receiver === currentUser.username);
-                    
+                claimedRequests.forEach(request => {
                     const historyItem = document.createElement('div');
                     historyItem.className = 'history-item';
                     
                     historyItem.innerHTML = `
                         <div class="history-status status-claimed">Claimed</div>
-                        <h3>${donation.foodType} (${donation.quantity})</h3>
-                        <p>Donor: ${donation.donor}</p>
-                        <p>Claimed on: ${new Date(donation.updatedAt || donation.createdAt).toLocaleString()}</p>
-                        <p>Location: ${donation.location?.display_name || 'Not specified'}</p>
-                        ${request.message ? `<p>Your message: ${request.message}</p>` : ''}
+                        <h3>${request.foodType} (${request.quantity})</h3>
+                        <p><strong>Donor:</strong> ${request.donor}</p>
+                        <p><strong>Claimed on:</strong> ${new Date(request.updatedAt || request.createdAt).toLocaleString()}</p>
+                        ${request.location?.display_name ? `<p><strong>Location:</strong> ${request.location.display_name}</p>` : ''}
+                        ${request.message ? `<p><strong>Your message:</strong> ${request.message}</p>` : ''}
+                        <p><strong>Description:</strong> ${request.foodDescription}</p>
                     `;
                     
                     container.appendChild(historyItem);
@@ -1066,9 +1284,9 @@
                     return;
                 }
                 
+                // Update donation status
                 const donations = JSON.parse(localStorage.getItem('foodDonations'));
                 const donationIndex = donations.findIndex(d => d.id === donationId);
-                
                 if (donationIndex !== -1) {
                     donations[donationIndex].status = 'claimed';
                     if (donations[donationIndex].requests && donations[donationIndex].requests.length > 0) {
@@ -1077,27 +1295,61 @@
                     // Add claim timestamp
                     donations[donationIndex].updatedAt = new Date().toISOString();
                     localStorage.setItem('foodDonations', JSON.stringify(donations));
-                    alert('Thank you for confirming! The donation has been marked as claimed.');
-                    loadDonations('all');
-                    loadMyRequests();
-                    loadHistory();
-                    loadStats();
                 }
+                
+                // Update NGO's request status
+                const ngoRequests = JSON.parse(localStorage.getItem('ngoRequests'));
+                const requestIndex = ngoRequests.findIndex(r => 
+                    r.donationId === donationId && 
+                    r.ngo === currentUser.username
+                );
+                if (requestIndex !== -1) {
+                    ngoRequests[requestIndex].status = 'claimed';
+                    ngoRequests[requestIndex].updatedAt = new Date().toISOString();
+                    localStorage.setItem('ngoRequests', JSON.stringify(ngoRequests));
+                }
+                
+                alert('Thank you for confirming! The donation has been marked as claimed.');
+                loadDonations('all');
+                loadMyRequests();
+                loadHistory();
+                loadStats();
             }
 
             function loadStats() {
                 const donations = JSON.parse(localStorage.getItem('foodDonations')) || [];
-                const availableDonations = donations.filter(d => d.status === 'available').length;
-                const userRequests = donations.filter(d => 
-                    d.requests && d.requests.some(r => r.receiver === currentUser.username)
-                ).length;
+                const ngoRequests = JSON.parse(localStorage.getItem('ngoRequests')) || [];
+                const now = new Date();
                 
-                // Count unique donors
-                const donors = [...new Set(donations.map(d => d.donor))].length;
+                // Available donations for NGO
+                const availableDonations = donations.filter(donation => {
+                    const bestBefore = new Date(donation.bestBefore);
+                    const visibleAfter = donation.visibleAfter ? new Date(donation.visibleAfter) : new Date(new Date(donation.createdAt).getTime() + 120000);
+                    
+                    // Check if already requested by this NGO
+                    const alreadyRequested = ngoRequests.some(r => 
+                        r.donationId === donation.id && 
+                        r.ngo === currentUser.username
+                    );
+                    
+                    return donation.status === 'available' && 
+                           !alreadyRequested &&
+                           now <= bestBefore &&
+                           now >= visibleAfter;
+                }).length;
+                
+                // Your requests
+                const yourRequests = ngoRequests.filter(r => r.ngo === currentUser.username).length;
+                
+                // People helped (estimated 5 people per claimed donation)
+                const peopleHelped = ngoRequests.filter(r => 
+                    r.ngo === currentUser.username && 
+                    r.status === 'claimed'
+                ).length * 5;
                 
                 document.getElementById('availableDonations').textContent = availableDonations;
-                document.getElementById('yourRequests').textContent = userRequests;
-                document.getElementById('activeDonors').textContent = donors;
+                document.getElementById('yourRequests').textContent = yourRequests;
+                document.getElementById('peopleHelped').textContent = peopleHelped;
             }
 
             // Calculate distance between two coordinates in km
@@ -1112,6 +1364,26 @@
                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
                 return R * c;
             }
+
+            // Clean up expired donations periodically
+            function cleanupExpiredDonations() {
+                const donations = JSON.parse(localStorage.getItem('foodDonations')) || [];
+                const now = new Date();
+                
+                const updatedDonations = donations.map(donation => {
+                    const bestBefore = new Date(donation.bestBefore);
+                    if (now > bestBefore && donation.status !== 'claimed' && donation.status !== 'expired') {
+                        donation.status = 'expired';
+                    }
+                    return donation;
+                });
+                
+                localStorage.setItem('foodDonations', JSON.stringify(updatedDonations));
+            }
+
+            // Run cleanup every minute
+            setInterval(cleanupExpiredDonations, 60000);
+            cleanupExpiredDonations(); // Run immediately on load
         });
     </script>
 </body>
